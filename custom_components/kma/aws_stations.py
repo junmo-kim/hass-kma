@@ -6,13 +6,13 @@ SG는 기상청 공개 목록의 ‘경기도청’ 관측소 분류 코드입�
 형식: 지점번호 -> (지점명, 지역). 지점번호는 영구 식별자, 이름/지역은 표시용.
 카탈로그에 없는 지점번호로 이미 저장된 서브엔트리도 그대로 로드된다.
 
-갱신 절차: 공개 출처에서 ASOS/AWS/SG 지점 목록을 다시 추출해 이 파일의 스냅샷과
-추출일을 교체한다. 자동 다운로드/스크래핑 기능은 두지 않는다. 교체 시 함께
-손봐야 할 곳: README의 지점 수/추출일, tests의 720개 지점 수를 확인하는 테스트
-(`test_aws_station_options_have_stable_values_and_named_labels`), 그리고 SG
-완전성 테스트가 대조하는 스냅샷 픽스처 `tests/fixtures/official_sg_stations.json`
-(카탈로그와 함께 갱신하지 않으면 다음 유효 갱신이 픽스처 검사에서 실패한다).
-지점번호는 영구 식별자이므로 기존 고유ID/엔티티ID에는 영향이 없다.
+갱신 절차: `python scripts/update_aws_stations.py --check`로 공식 목록과의 차이를
+확인하고, 반영하려면 `python scripts/update_aws_stations.py --write`를 실행한다
+(선택: `--html <저장한 페이지>`로 오프라인 파싱, `--date YYYY-MM-DD`로 추출일 지정,
+`--allow-removals`로 지점 삭제 허용). 런타임은 이 스냅샷만 읽으므로 자동 다운로드나
+JSON 로더를 두지 않는다. SG 픽스처 `tests/fixtures/official_sg_stations.json`은
+독립 골든 오라클이라 자동으로 덮어쓰지 않으며, 공식 출처 변경을 검토한 뒤 수동으로
+갱신한다. 지점번호는 영구 식별자이므로 기존 고유ID/엔티티ID에는 영향이 없다.
 """
 from __future__ import annotations
 

@@ -344,8 +344,8 @@ def test_aws_station_flow_has_no_reconfigure_step() -> None:
     assert not hasattr(AwsStationSubentryFlowHandler, "async_step_user_reconfigure")
 
 
-def test_aws_station_catalog_is_public_and_complete() -> None:
-    # 2026-10-08 공식 목록: ASOS 98 + AWS 540 + SG 82 = 720 (AM/SW/OA 제외).
+def test_aws_station_catalog_snapshot_basics() -> None:
+    """기본 스냅샷 — 대표 항목과 키/값 형식을 확인한다."""
     assert len(AWS_STATION_CATALOG) == 720
     assert AWS_STATION_CATALOG[108] == ("서울", "서울특별시")
     assert AWS_STATION_CATALOG[400] == ("강남", "서울특별시")
@@ -377,8 +377,8 @@ def test_catalog_excludes_out_of_scope_station_categories() -> None:
     assert not leaked, leaked
 
 
-def test_existing_asos_aws_identities_are_unchanged() -> None:
-    """기존 ASOS/AWS 지점의 번호→(이름, 지역) 매핑은 그대로 유지된다."""
+def test_representative_asos_aws_display_metadata() -> None:
+    """대표 ASOS/AWS 지점의 번호→(이름, 지역) 표시 메타데이터를 고정한다."""
     assert AWS_STATION_CATALOG[90] == ("속초", "강원특별자치도")
     assert AWS_STATION_CATALOG[108] == ("서울", "서울특별시")
     assert AWS_STATION_CATALOG[119] == ("수원", "경기도")
@@ -391,7 +391,7 @@ def test_aws_station_options_have_stable_values_and_named_labels() -> None:
     values = [value for value, _ in options]
     labels = [label for _, label in options]
 
-    assert len(options) == 720
+    assert len(options) == len(AWS_STATION_CATALOG)
     assert values == labels  # 선택 후에도 이름이 보이도록 값=라벨
     assert len(set(values)) == len(values)  # 값은 고유
     assert len(set(labels)) == len(labels)  # 라벨도 고유(번호 포함)
